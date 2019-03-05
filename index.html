@@ -40,37 +40,40 @@
 			setInterval(update, 0);
 			setInterval(render,0);
 		}*/
-		const run = function(){
-			Listen();
-			const loop = function(){
-				update();
-				render();
-				window.requestAnimationFrame(loop);
-			}
-			window.requestAnimationFrame(loop);
-		}
-		for(let j=0;j<=960;j+=960){
+		const run =	function(){
+						Listen();
+						const loop = 	function(){
+											update();
+											render();
+											window.requestAnimationFrame(loop);
+										}
+						window.requestAnimationFrame(loop);
+					}
+
+		for(let j=0;j<=960;j+=960){ // Add the trees around the map
 			for(let i=0;i<mapWidth/40;i++)
 				objects.add(unit("wood",i*40,j,40,40));
 			for(let i=1;i<mapHeight/40;i++)
 				objects.add(unit("wood",j,i*40,40,40));
 		}
-		objects.add(unit("stone",500,500,30,30,-Infinity,"spawn"));
-		objects.add(unit("wood",500,600,40,40));
+
+		objects.add(unit("stone",500,500,30,30,-Infinity,"spawn")); // Spawn
+		objects.add(unit("wood",500,600,40,40)); // The tree next to the Spawn
+	
 		const update =	function(){
-			player.update();
-			objects.update();
-			map.inventory.update();
-			updateTicks();
-		}
-		const render = function(){ // Arrangement is just adjusting the draw priority
-			camera.render();
-			map.inventory.render();
-			objects.render();
-			player.render();
-			renderStatistics();
-			GUI.render();
-		}
+							player.update();
+							objects.update();
+							map.inventory.update();
+							statistics.update();
+						}
+		const render =	function(){ // Arrangement is just adjusting the draw priority
+							camera.render();
+							map.inventory.render();
+							objects.render();
+							player.render();
+							statistics.render();
+							GUI.render();
+						}
 		run();
 	</script>
 </html>

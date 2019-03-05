@@ -1,32 +1,45 @@
-const canvas = document.getElementById("ctx")
-const ctx = canvas.getContext("2d");
-const mapWidth = 1000, mapHeight = 1000;
-const tileHeight = 40, tileWidth = 40;
-let ticks = 60;
-let fps =60;
-let debug = 0;
+const canvas 		= document.getElementById("ctx")
+const ctx 			= canvas.getContext("2d");
+const 	mapWidth 	= 1000,
+		mapHeight 	= 1000;
+const 	tileHeight 	= 40,
+		tileWidth 	= 40;
+let ticks			= 60;
+let fps				= 60;
+let debug			= 0;
 const itemIds = {
-	"wood": 	1,
-	"stone": 	2,
-	"leaves":	3,
-};
+					"wood": 	1,
+					"stone": 	2,
+					"leaves":	3,
+				};
 const itemProperties = {
-	"wood": 	{sheetSkin: new Image(), dropSkin: new Image(), health:10 * 100},
-	"stone": 	{sheetSkin: new Image(), dropSkin:	new Image(), health: 20 * 100},
+	"wood": 	{
+					sheetSkin: new Image(),
+					dropSkin: new Image(),
+					health:10 * 100
+				},
+	"stone": 	{
+					sheetSkin: new Image(),
+					dropSkin:	new Image(),
+					health: 20 * 100
+				},
 	"leaves": 	{sheetSkin: new Image(), dropSkin:	new Image()}
 }
-itemProperties["wood"].dropSkin.src = "IMG/Items/woodDrop.png";itemProperties["stone"].dropSkin.src = "IMG/Items/stoneDrop.png";
-itemProperties["wood"].sheetSkin.src = "IMG/Items/tree/rings.png";itemProperties["stone"].sheetSkin.src = "IMG/Items/stoneSheet.png";
-itemProperties["leaves"].sheetSkin.src = "IMG/Items/tree/crown.png";itemProperties["leaves"].dropSkin.src = "IMG/Items/leavesDrop.png";
+itemProperties["wood"].dropSkin.src		= "IMG/Items/woodDrop.png";
+itemProperties["stone"].dropSkin.src	= "IMG/Items/stoneDrop.png";
+itemProperties["wood"].sheetSkin.src	= "IMG/Items/tree/rings.png";
+itemProperties["stone"].sheetSkin.src	= "IMG/Items/stoneSheet.png";
+itemProperties["leaves"].sheetSkin.src	= "IMG/Items/tree/crown.png";
+itemProperties["leaves"].dropSkin.src	= "IMG/Items/leavesDrop.png";
 Object.freeze(itemIds);
 const item = function(name){ // State : idle, hand | Position: inventory, map | Possession: Player, object
-	me = {
-		id:			itemIds[name],
-		name:		name
-		/*state:		state,
-		possession:	possession,
-		position:	position*/
-	}
+	me = 	{
+				id:			itemIds[name],
+				name:		name
+				/*state:		state,
+				possession:	possession,
+				position:	position*/
+			}
 	return me;
 }
 
@@ -96,90 +109,90 @@ map.inventory = {
 	size:	0,
 	stack:	[],
 	Group:	[],
-	render:	function(){
-				for(let i=0;i<this.Group.length;i++){
-					if(this.Group[i].length < 1){
-						this.Group.splice(i,1);
-						this.Group.reArrange();
-						continue;
-					}
-					if(	this.Group[i].x + this.itemWidth < player.x - canvas.width/2	||
-						this.Group[i].x > player.x + player.width + canvas.width/2		||
-						this.Group[i].y + this.itemHeight < player.y - canvas.height/2	||
-						this.Group[i].y > player.y + player.height + canvas.height/2) continue;
-					if(itemProperties[this.Group[i][0].name] != undefined)
-						ctx.drawImage(itemProperties[this.Group[i][0].name].dropSkin,this.Group[i].x + canvas.width/2 - player.x,this.Group[i].y + canvas.height/2 - player.y,this.itemWidth,this.itemHeight);
-				}
-			},
-	update:	function(){
-				this.Group.update();
-				for(let i=0;i<this.Group.length;i++){
-					if(this.Group[i].length < 1){
-						this.Group.splice(i,1);
-						this.Group.reArrange();
-						continue;
-					}
-					itemBounds = rect(this.Group[i].x,this.Group[i].y,this.itemWidth,this.itemHeight);
-					if(itemBounds.collide(player.bounds) && this.Group[i].cd == 0){
-						if(player.inventory.push(item(this.Group[i][0].name))) this.pop(i);
-					}
-				}
-			},
-	push:	function(item,x,y,count = 1){
-				x = Math.floor(x),y = Math.floor(y);
-				for(let i=0;i<count;i++){
-					const tempItem = {
-						id: 0,
-						groupId: 0,
-						name: item.name,
-						itemId: item.id,
-					}
-					let j = 0;
-					if(this.Group.length == 0){
-						this.Group.push([]);
-						this.Group[0].push(tempItem);
-						this.Group[0].cd = ticks;
-					}
-					else{
-						for(;j<this.Group.length;j++) if(this.Group[j].x == x && this.Group[j].y == y && this.Group[j][0].name == tempItem.name) break;
-						if(j >= this.Group.length || this.Group.length == 0) this.Group.push([]);
-						this.Group[j].push(tempItem);
-						this.Group[j].cd = ticks;
-					}
-					this.Group[j].x = x; this.Group[j].y = y;
-					tempItem.groupId = j;
-					tempItem.id = this.Group[j].length;
-					if(this.Group[j].id != this.Group.length - 1) this.Group[j].id = this.Group.length - 1;
-				}
-			},
-	reArrange:	function(groupId = 0){
-					if(groupId == 0){
+	render:			function(){
 						for(let i=0;i<this.Group.length;i++){
-							if(this.Group[i].id != i) this.Group[i].id = i;
-							for(let j=0;j<this.Group[i].length;j++){
-								this.Group[i][j].id = j;
-								this.Group[i][j].groupId = i;
+							if(this.Group[i].length < 1){
+								this.Group.splice(i,1);
+								this.Group.reArrange();
+								continue;
+							}
+							if(	this.Group[i].x + this.itemWidth < player.x - canvas.width/2	||
+								this.Group[i].x > player.x + player.width + canvas.width/2		||
+								this.Group[i].y + this.itemHeight < player.y - canvas.height/2	||
+								this.Group[i].y > player.y + player.height + canvas.height/2) continue;
+							if(itemProperties[this.Group[i][0].name] != undefined)
+								ctx.drawImage(itemProperties[this.Group[i][0].name].dropSkin,this.Group[i].x + canvas.width/2 - player.x,this.Group[i].y + canvas.height/2 - player.y,this.itemWidth,this.itemHeight);
+						}
+					},
+	update:			function(){
+						this.Group.update();
+						for(let i=0;i<this.Group.length;i++){
+							if(this.Group[i].length < 1){
+								this.Group.splice(i,1);
+								this.Group.reArrange();
+								continue;
+							}
+							itemBounds = rect(this.Group[i].x,this.Group[i].y,this.itemWidth,this.itemHeight);
+							if(itemBounds.collide(player.bounds) && this.Group[i].cd == 0){
+								if(player.inventory.push(item(this.Group[i][0].name))) this.pop(i);
 							}
 						}
-					}else for(let j=0;j<this.Group[groupId].length;j++){
-						console.log(this.Group[groupId][j].id + " " + j);
-						this.Group[groupId][j].id = j;
-					};
-				},
-	pop:		function(groupId){
-					if(this.Group.length < 1) return new Error("There are no items left on the map.");
-					if(this.Group.length < groupId) return new Error("Group not found.");
-					else
-						this.removeN(groupId,this.Group[groupId].length - 1,1)
-				},
-	removeN:	function(groupId,i,n){
-					let ReArr = false;
-					if(this.Group.length < 1) return new Error("There are no items left on the map.");
-					if(i + n != this.Group[groupId].length) ReArr = true;
-					this.Group[groupId].splice(i,n);
-					if(ReArr) this.reArrange(groupId);
-				},
-	removeByGroupId:	function(groupId){
+					},
+	push:			function(item,x,y,count = 1){
+						x = Math.floor(x),y = Math.floor(y);
+						for(let i=0;i<count;i++){
+							const tempItem = {
+								id: 0,
+								groupId: 0,
+								name: item.name,
+								itemId: item.id,
+							}
+							let j = 0;
+							if(this.Group.length == 0){
+								this.Group.push([]);
+								this.Group[0].push(tempItem);
+								this.Group[0].cd = ticks;
+							}
+							else{
+								for(;j<this.Group.length;j++) if(this.Group[j].x == x && this.Group[j].y == y && this.Group[j][0].name == tempItem.name) break;
+								if(j >= this.Group.length || this.Group.length == 0) this.Group.push([]);
+								this.Group[j].push(tempItem);
+								this.Group[j].cd = ticks;
+							}
+							this.Group[j].x = x; this.Group[j].y = y;
+							tempItem.groupId = j;
+							tempItem.id = this.Group[j].length;
+							if(this.Group[j].id != this.Group.length - 1) this.Group[j].id = this.Group.length - 1;
+						}
+					},
+	reArrange:		function(groupId = 0){
+						if(groupId == 0){
+							for(let i=0;i<this.Group.length;i++){
+								if(this.Group[i].id != i) this.Group[i].id = i;
+								for(let j=0;j<this.Group[i].length;j++){
+									this.Group[i][j].id = j;
+									this.Group[i][j].groupId = i;
+								}
+							}
+						}else for(let j=0;j<this.Group[groupId].length;j++){
+							console.log(this.Group[groupId][j].id + " " + j);
+							this.Group[groupId][j].id = j;
+						};
+					},
+	pop:			function(groupId){
+						if(this.Group.length < 1) return new Error("There are no items left on the map.");
+						if(this.Group.length < groupId) return new Error("Group not found.");
+						else
+							this.removeN(groupId,this.Group[groupId].length - 1,1)
+					},
+	removeN:		function(groupId,i,n){
+						let ReArr = false;
+						if(this.Group.length < 1) return new Error("There are no items left on the map.");
+						if(i + n != this.Group[groupId].length) ReArr = true;
+						this.Group[groupId].splice(i,n);
+						if(ReArr) this.reArrange(groupId);
+					},
+	removeByGroupId:function(groupId){
 							if(this.Group.length < 1) return new Error("No groups.");
 							if(this.Group.length <= groupId) return new Error("Group with id: " + groupId + " was not found");
 							this.removeN(groupId,0,this.Group[groupId].length);
@@ -208,24 +221,24 @@ map.inventory = {
 						return this.Group.splice(0,this.Group.length);
 					}
 }
-map.inventory.Group.reArrange = function(){
-	const inv = map.inventory;
-	for(let i=0;i<inv.Group.length;i++){
-		if(inv.Group[i].length < 1){
-			inv.Group.splice(i,1);
-			inv.Group.reArrange();
-			i--;
-			continue;
-		}
-		//console.log(inv.Group);
-		if(inv.Group[i][0].groupId != i)
-			for(let j=0;j<inv.Group[i].length;j++) inv.Group[i][j].groupId = i;
-		inv.Group[i].id = i;
-	}
-}
-map.inventory.Group.update = function(){
-	const me = map.inventory.Group
-	for(let i=0;i<me.length;i++){
-		if(me[i].cd > 0) me[i].cd--;
-	}
-}
+map.inventory.Group.reArrange = 	function(){
+									const inv = map.inventory;
+									for(let i=0;i<inv.Group.length;i++){
+										if(inv.Group[i].length < 1){
+											inv.Group.splice(i,1);
+											inv.Group.reArrange();
+											i--;
+											continue;
+										}
+										//console.log(inv.Group);
+										if(inv.Group[i][0].groupId != i)
+											for(let j=0;j<inv.Group[i].length;j++) inv.Group[i][j].groupId = i;
+										inv.Group[i].id = i;
+									}
+								}
+map.inventory.Group.update = 	function(){
+									const me = map.inventory.Group
+									for(let i=0;i<me.length;i++){
+										if(me[i].cd > 0) me[i].cd--;
+									}
+								}

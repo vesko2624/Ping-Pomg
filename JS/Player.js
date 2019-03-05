@@ -17,30 +17,30 @@ const playerSrc = {
 		el:		new Image(),
 	},
 	weapons: {
-		timings: 	[100,100,100,100,100,200],
-		sleep:		[0,0,0,0,0,737],
-		dmg: [25,20,10,15,35,399],
-		firstClass: new Image(),
-		secondClass: new Image(),
+		timings: 		[100,100,100,100,100,200],
+		sleep:			[0,0,0,0,0,737],
+		dmg:			[25,20,10,15,35,399],
+		firstClass: 	new Image(),
+		secondClass: 	new Image(),
 	}
 }
 /* ---- Tires ---- */
-	playerSrc.tires.normal.src = "IMG/Player/tires/normal.png"; 
-	playerSrc.tires.rusty.src = "IMG/Player/tires/rusty.png"; 
-	playerSrc.tires.two.src = "IMG/Player/tires/two.png"; 
-	playerSrc.tires.three.src = "IMG/Player/tires/three.png"; 
+	playerSrc.tires.normal.src = 		"IMG/Player/tires/normal.png"; 
+	playerSrc.tires.rusty.src = 		"IMG/Player/tires/rusty.png"; 
+	playerSrc.tires.two.src = 			"IMG/Player/tires/two.png"; 
+	playerSrc.tires.three.src = 		"IMG/Player/tires/three.png"; 
 /* ---- ----- ---- */
 /* ---- Chassis ---- */
-	playerSrc.chassis.armor.src = "IMG/Player/chassis/armor.png"; 
-	playerSrc.chassis.normal.src = "IMG/Player/chassis/normal.png";
-	playerSrc.chassis.race.src = "IMG/Player/chassis/race.png";
+	playerSrc.chassis.armor.src = 		"IMG/Player/chassis/armor.png"; 
+	playerSrc.chassis.normal.src = 		"IMG/Player/chassis/normal.png";
+	playerSrc.chassis.race.src = 		"IMG/Player/chassis/race.png";
 /* ---- ------- ---- */
 /* ---- Effects ---- */
-	playerSrc.effects.fire.src =  "IMG/Player/effects/fi.png"
-	playerSrc.effects.el.src =  "IMG/Player/effects/el.png"
+	playerSrc.effects.fire.src =  		"IMG/Player/effects/fi.png"
+	playerSrc.effects.el.src = 			"IMG/Player/effects/el.png"
 /* ---- ------- ---- */
 /* ---- Weapons ---- */
-	playerSrc.weapons.firstClass.src = "IMG/Player/weapons/first_class.png"
+	playerSrc.weapons.firstClass.src = 	"IMG/Player/weapons/first_class.png"
 	playerSrc.weapons.secondClass.src = "IMG/Player/weapons/second_class.png"
 /* ---- ------- ---- */
 const player = {
@@ -52,18 +52,18 @@ const player = {
 	hDirection:	0,
 	vDirection:	0,
 	prevent:	{
-		Left:	false,
-		Right:	false,
-		Up:		false,
-		Down:	false,
-	},
+					Left:	false,
+					Right:	false,
+					Up:		false,
+					Down:	false,
+				},
 	upgrades:	{
-		weapon:			0,
-		tireColor: 		0,
-		chassisColor:	0,
-		tires:			"normal",
-		chassis:		"armor",
-	},
+					weapon:			0,
+					tireColor: 		0,
+					chassisColor:	0,
+					tires:			"normal",
+					chassis:		"armor",
+				},
 	animate: 	{i:0,j:0,g:4},
 	Direction:	0,
 	spdX:		realSpeed.toFixed(2),
@@ -107,7 +107,7 @@ const player = {
 }
 let Gillotine = 0;
 player.animate.render = function(){
-	const Directions = ["Up","Down","Left","Right"];
+	const Directions = ["Up", "Down", "Left", "Right"];
 	let state = 0;
 	let Direction = player.getDirection;
 	// Remove LeftUp LeftDown RightUp and RightDown

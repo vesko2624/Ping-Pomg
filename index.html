@@ -1,0 +1,76 @@
+<html>
+	<head>
+		<title>PingPomg</title>
+	</head>
+	<body>
+		<canvas id="ctx" width="650" height="500" style="border:1px solid #000000;" onfocusout="csa()"></canvas>
+	</body>
+	<script src="JS/Game.js"></script>
+	<script src="JS/Shop.js"></script>
+	<script src="JS/Listener.js"></script>
+	<script src="JS/Player.js"></script>
+	<script src="JS/Camera.js"></script>
+	<script src="JS/Units.js"></script>
+	<script src="JS/Inventory.js"></script>
+	<script>
+		// @TODO Make Library
+		// @TODO Make the shop
+		// @TODO Add weapons to the shop adjust the breaking speed and add inventory to every unit.
+		// @TODO Make mining direction dependant
+		// @TODO Do something 'bout the diagonal walking detection in the breaking mechanism
+		// @TODO Instead checking just the direction you are walking when you click space, check all direction and for every direction create an Interval
+		// @TODO Adjust player breaking speed
+		// @TODO Move items from inventory with the mouse, drop them aswell
+		// @TODO a better way of grouping items;
+		// @TODO Staying still animation, picking animation, grouping animation, dropping animation
+		// @TODO Fix all bugs appearing when changing tileSize -----------------------------
+		// @TODO on player stuck teleport to closest open spot
+		// @TODO Add natural object spawning
+		// @TODO Slow breaking speed and animation
+		// @TODO Add some kind of tools to improve breaking speeds
+		// @TODO Add some elements and adjust healths, Infinite health for water aswell
+		// @@TODO Make a map instead of drawing a 1000x1000px image of yellow filled 2d Plane
+		// @TODO Crafting
+		// @@@TODO Implement infinite world generation
+		// @TODO Add entities, that should use some kind of AI
+		// @TODO Add Health and maybe other player stats
+		// @TODO Sometimes when adding multiple objects with random coordinates, it bugs and doesn't draw some of them or the visual size bug but drawSize not, or Draw on map function is the problem
+		/*const run = function(){
+			Listen();
+			setInterval(update, 0);
+			setInterval(render,0);
+		}*/
+		const run = function(){
+			Listen();
+			const loop = function(){
+				update();
+				render();
+				window.requestAnimationFrame(loop);
+			}
+			window.requestAnimationFrame(loop);
+		}
+		for(let j=0;j<=960;j+=960){
+			for(let i=0;i<mapWidth/40;i++)
+				objects.add(unit("wood",i*40,j,40,40));
+			for(let i=1;i<mapHeight/40;i++)
+				objects.add(unit("wood",j,i*40,40,40));
+		}
+		objects.add(unit("stone",500,500,30,30,-Infinity,"spawn"));
+		objects.add(unit("wood",500,600,40,40));
+		const update =	function(){
+			player.update();
+			objects.update();
+			map.inventory.update();
+			updateTicks();
+		}
+		const render = function(){ // Arrangement is just adjusting the draw priority
+			camera.render();
+			map.inventory.render();
+			objects.render();
+			player.render();
+			renderStatistics();
+			GUI.render();
+		}
+		run();
+	</script>
+</html>

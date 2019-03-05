@@ -1,12 +1,12 @@
-const slotSize =			30;
-const inventoryMaxSize = 	9;
-const getInventorySize = 	function(){
-								const size = Math.floor((canvas.width * 2/4)/(slotSize + 10) - 1);
-								if(size > inventoryMaxSize) return inventoryMaxSize;
-								else return size;
-							}
-const calcSlotY = 				() => canvas.height - 60 + (50 - slotSize)/2;
-const calcDistBetweenSlots =  	() => (canvas.width * 2/4 - (5 + slotSize)*2)/getInventorySize();
+const slotSize				=	30;
+const inventoryMaxSize		=	9;
+const getInventorySize		= 	function(){
+									const size = Math.floor((canvas.width * 2/4)/(slotSize + 10) - 1);
+									if(size > inventoryMaxSize) return inventoryMaxSize;
+									else return size;
+								}
+const calcSlotY 			=	() => canvas.height - 60 + (50 - slotSize)/2;
+const calcDistBetweenSlots	=	() => (canvas.width * 2/4 - (5 + slotSize)*2)/getInventorySize();
 player.inventory = {
 	x:					canvas.width * 1/4,
 	y:					canvas.height - 60,
@@ -18,7 +18,7 @@ player.inventory = {
 	distBetweenSlots: 	calcDistBetweenSlots(),
 	cHeight: 			canvas.height,
 	cWidth:				canvas.width,
-	selectedSlot: 0,
+	selectedSlot: 		0,
 	update:				function(){
 							if(this.cHeight != canvas.height || this.cWidth != canvas.width){
 								this.x = canvas.width * 1/4;
@@ -75,11 +75,11 @@ player.inventory = {
 						}
 }
 player.inventory.itemSlot = function(id = 0) {
-	let me = {
-		id: 		id,
-		stack: 		[],
-		stackSize: 	10
-	}
+	let me = 	{
+					id: 		id,
+					stack: 		[],
+					stackSize: 	10
+				}
 	me.push = 			function(item){
 							if(this.stack.length != 0 && this.stack[0].name != item.name) return false;
 							if(this.stack.length < this.stackSize){
